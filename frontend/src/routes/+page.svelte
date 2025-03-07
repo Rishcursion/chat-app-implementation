@@ -7,7 +7,7 @@
 		isMounted = true;
 	});
 	function login_redirect() {
-		window.location.href = '/login';
+		window.location.href = '/auth';
 	}
 	const features = [
 		{
