@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
-	import { quartIn } from 'svelte/easing';
+	import { quartIn, quartOut } from 'svelte/easing';
 	import { enhance } from '$app/forms';
 	let isLogin = $state(true);
 	let { data, form } = $props();
@@ -16,7 +16,7 @@
 	<!-- main container -->
 	<div
 		class=" flex max-w-md flex-col items-center justify-start rounded-xl bg-white/10 p-6 text-center backdrop-blur-lg md:w-3/4"
-		in:fly={{ easing: quartIn, duration: 1000, y: 100 }}
+		in:fly={{ easing: quartOut, duration: 1000, y: 100 }}
 	>
 		<h1 class="text-headline text-4xl font-bold">Welcome Back</h1>
 		<p class="text-paragraph w-1/2 pt-2 text-lg">We missed you, so did your friends!</p>
@@ -28,7 +28,7 @@
 			<div class="flex flex-col items-start">
 				<label for="username" class="text-headline text-lg font-semibold">Username</label>
 				<input
-					id="username"
+					name="username"
 					type="text"
 					required
 					maxlength="64"
@@ -39,7 +39,7 @@
 			<div class="flex flex-col items-start">
 				<label for="password" class="text-headline text-lg font-semibold">Password</label>
 				<input
-					id="password"
+					name="password"
 					type="password"
 					required
 					class="text-paragraph focus:border-button text-md my-2 transform rounded-lg border-2 bg-white/5 p-2 transition-colors ease-in"
@@ -64,7 +64,7 @@
 {:else}
 	<!-- main container -->
 	<div
-		in:fly={{ easing: quartIn, duration: 1000, y: 100 }}
+		in:fly={{ easing: quartOut, duration: 1000, y: 100 }}
 		class="flex max-w-md flex-col items-center justify-start rounded-xl bg-white/10 p-6 text-center backdrop-blur-lg md:w-3/4"
 	>
 		<h1 class="text-headline text-4xl font-bold">Welcome!</h1>

@@ -4,8 +4,12 @@ import { fail, redirect } from '@sveltejs/kit';
 export const actions = {
 	login: async ({ cookies, request }) => {
 		const data = await request.formData();
-		const username = data.get('username') as string;
-		const password = data.get('password') as string;
+		for (var pair of data.entries()) {
+			console.log(pair[0] + ', ' + pair[1]);
+		}
+		const username = data.get('username');
+		const password = data.get('password');
+		console.log(`${username}, ${password}`);
 		const response = await fetch('http://localhost:8000/auth/login', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
