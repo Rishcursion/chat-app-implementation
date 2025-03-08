@@ -9,6 +9,8 @@ class Variables:
     PROJECT_NAME = "Chat-App"
     PROJECT_VER = "0.0.1"
     DB_DIALECT = "Postgres"
+    SERVER_PORT = "8000"
+    SERVER_DOMAIN = f"http://localhost:{SERVER_PORT}/"
     # ENV Variables
     DB_USER = os.getenv("DB_USER")
     DB_PASSWORD = os.getenv("DB_PASSWORD")

@@ -1,10 +1,10 @@
-from config import variables
+from app.core.config import variables
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
 print("Creating Asynchronous SQLAlchemy Engine...")
 engine = create_async_engine(variables.DB_URL, echo=True)
-SessionLocal = async_sessionmaker(bind=engine, expire_on_commit=False)
+SessionLocal = async_sessionmaker(bind=engine,autoflush=False, expire_on_commit=False)
 print("Succesfully Started Local Session To: ", variables.DB_URL)
 
 
@@ -12,10 +12,5 @@ print("Succesfully Started Local Session To: ", variables.DB_URL)
 class Base(DeclarativeBase):
     pass
 
-
-async def get_db() -> AsyncSession:
-    async with SessionLocal() as session:
-        yield session  # Provide the session to route handlers
-
-
-from models import *
+# Initialising Database models
+from app.models import *
