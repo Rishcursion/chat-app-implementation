@@ -49,7 +49,7 @@
 		>
 			{#each features as feature, i}
 				<div
-					class="transform rounded-lg bg-white/5 p-6 transition-all duration-500 hover:scale-105"
+					class="hover:border-button transform rounded-lg bg-white/5 p-6 transition-all duration-500 hover:scale-105 hover:border-2"
 					in:fly={{ duration: 500, delay: 1000 + i * 400, y: 50, easing: linear }}
 				>
 					<div class="mb-4 transform text-4xl transition-transform duration-500 hover:scale-110">
