@@ -3,6 +3,8 @@ from typing import Union
 
 import jwt
 from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
+
 from app.core.config import variables
 
 # Setting up the argon2ID with owasp defined guidelines https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
@@ -43,7 +45,10 @@ def verify_password(password: str, hash: str) -> bool:
     Returns:
         [TODO:description]
     """
-    return ph.verify(hash=hash, password=password)
+    try:
+        return ph.verify(hash=hash, password=password)
+    except VerifyMismatchError:
+        return False
 
 
 def create_token(data: dict, expires_delta: Union[timedelta, None] = None) -> str:
@@ -52,7 +57,7 @@ def create_token(data: dict, expires_delta: Union[timedelta, None] = None) -> st
         expires_on = datetime.now(UTC) + expires_delta
     else:
         expires_on = datetime.now(UTC) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"expires on": expires_on})
+    to_encode.update({"expires on": str(expires_on)})
     return jwt.encode(to_encode, key=str(variables.JWT_SECRET))
 
 

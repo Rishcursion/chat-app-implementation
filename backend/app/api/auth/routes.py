@@ -1,12 +1,10 @@
 import logging
 
-from fastapi import APIRouter, Depends
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio.session import AsyncSession
+from fastapi import APIRouter
+from fastapi.exceptions import HTTPException
 
-from app.api.dependencies import get_db
-from app.models import UserAuth
 from app.schemas.userdetails import UserDetails
+from app.utils.security import create_token, verify_password
 
 # Define a parent router for authentication
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -15,13 +13,27 @@ logger.setLevel(logging.DEBUG)
 
 
 @router.post("/login")
-async def login(user_data: UserDetails, db: AsyncSession = Depends(get_db)):
+async def login(user_data: UserDetails):
     username = user_data.username
     password = user_data.password
     logger.debug(
-        f"Recieved Login Details, details: {user_data}",
+        f"Recieved Login Details From User: {username}",
     )
-    user_details = await db.execute(select(UserAuth))
-    user = user_details.scalar()
-    logger.debug(f"user_details : {user.created_on}")
-    return {"access_token": "asdfjaklsdfjakdfjaldsfkjasdfs", "token_type": "bearer"}
+    user_details = get_user(username)
+    if not user_details:
+        raise HTTPException(404, detail="User Not Found!")
+    else:
+        hashed_password = user_details.password
+        match = verify_password(password=password, hash=hashed_password)
+        if match:
+            return {
+                "access_token": create_token(
+                    {
+                        "user_id": user_details.user_id,
+                        "user_name": user_details.user_name,
+                    }
+                ),
+                "token_type": "bearer",
+            }
+        else:
+            raise HTTPException(401, detail="Uh Oh! Invalid Credentials")
