@@ -49,6 +49,8 @@ def verify_password(password: str, hash: str) -> bool:
         return ph.verify(hash=hash, password=password)
     except VerifyMismatchError:
         return False
+    except InvalidHashErro:
+        return False
 
 
 def create_token(data: dict, expires_delta: Union[timedelta, None] = None) -> str:

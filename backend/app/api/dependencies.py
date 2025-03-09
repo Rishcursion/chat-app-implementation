@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import HTTPException, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
@@ -14,6 +16,12 @@ async def get_db():
 
 
 security = HTTPBearer()
+
+
+def logger() -> logging.Logger:
+    logger = logging.getLogger("uvicorn.error")
+    logger.setLevel(logging.DEBUG)
+    return logger
 
 
 async def get_current_user(
