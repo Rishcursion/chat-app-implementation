@@ -1,3 +1,4 @@
+from fastapi.exceptions import HTTPException
 from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,7 +16,10 @@ async def get_user_by_userid(user_id: str, db: AsyncSession):
     query = select(UserAuth).where(UserAuth.user_id == user_id)
     query_result = await db.execute(query)
     details = query_result.scalar_one_or_none()
-    return details
+    if details:
+        return details
+    else:
+        raise HTTPException(401, detail="User Does Not Exist?")
 
 
 async def register_user(username: str, password: str, db: AsyncSession) -> bool:

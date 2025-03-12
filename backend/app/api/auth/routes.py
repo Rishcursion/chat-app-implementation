@@ -101,7 +101,7 @@ async def register(
 
 @router.get("/me")
 async def get_current_user(
-    token: str = Depends(OAuth2PasswordBearer),
+    token: str = Depends(oauth2_scheme),
     db: AsyncSession = Depends(get_db),
     logger: logging.Logger = Depends(logger),
 ):
@@ -117,7 +117,7 @@ async def get_current_user(
         HTTPException: [TODO:description]
         HTTPException: [TODO:description]
     """
-    logger.debug("Recieved Ping")
+    logger.debug(f"Recieved Ping, token: {token}")
     payload = decode_token(token)  # Decode JWT
     logger.debug(f"User Token Recieved: {payload}")
     if not payload:
@@ -127,5 +127,4 @@ async def get_current_user(
     user = await get_user_by_userid(user_id, db)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-
-    return {"user_id": user.user_id, "username": user.user_name}
+    return {"username": user.user_name}
