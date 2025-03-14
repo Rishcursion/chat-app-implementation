@@ -12,4 +12,24 @@
 	--color-illustration-highlight: #eebbc3;
 	--color-illustration-secondary: #fffffe;
 	--color-illustration-tertiary: #eebbc3;
+
+	--animate-typing: typing 2s steps(20) alternate, blink 0.7s infinite;
+	@keyframes typing {
+		0% {
+			width: 0%;
+			visibility: hidden;
+		}
+		100% {
+			width: 100%;
+		}
+	}
+
+	@keyframes blink {
+		50% {
+			border-color: transparent;
+		}
+		100% {
+			border-color: white;
+		}
+	}
 }

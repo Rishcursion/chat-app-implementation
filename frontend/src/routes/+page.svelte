@@ -44,12 +44,24 @@
 			}}
 		>
 			<!-- About Section -->
-			<div in:fly={{ duration: 1000, delay: 400, x: -200, easing: quartIn }} class="text-center">
-				<img src="/logo.svg" alt="" />
-				<h1 class="text-headline mb-8 text-5xl font-bold">Textly</h1>
-				<p class="text-paragraph w-full text-center text-2xl">
-					Your personal minimalistic chat app to connect with friends and family securely.
-				</p>
+			<div
+				in:fly={{ duration: 1000, delay: 400, x: -200, easing: quartIn }}
+				class="flex flex-col items-center justify-center text-center"
+			>
+				<div class="w-max">
+					<h1
+						class="animate-typing border-r-headline transition-deelay text-headline overflow-hidden border-r-4 text-5xl font-bold whitespace-nowrap hover:scale-105"
+					>
+						Textly
+					</h1>
+				</div>
+				<div class="w-max">
+					<p
+						class="text-paragraph animate-typing border-r-paragraph w-full overflow-hidden border-r-4 text-center text-2xl whitespace-nowrap"
+					>
+						Your personal minimalistic chat app to connect with friends and family securely.
+					</p>
+				</div>
 			</div>
 			<!-- features section -->
 			<div
