@@ -1,110 +1,150 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { quintIn } from 'svelte/easing';
-	import { fly } from 'svelte/transition';
 	import ChatWindow from '$lib/components/chat_window.svelte';
+	import Sidebar from '$lib/components/sidebar.svelte';
+	import { activeChat } from '$lib/store/globalState';
 	type UserData = {
 		username: string;
 		invite_code: string;
 	};
 	type test = {
+		chat_id: number;
 		username: string;
 		timestamp: string;
 		message_head: string;
+		messages: {
+			content: string;
+			sender: string;
+			time: string;
+		}[];
 	};
-	let { data }: { user?: UserData } = $props();
+	let { data }: { data: any; user?: UserData } = $props();
 	// User Details
 	let username: string = data.user.username;
 	let invite_code: string = data.user.invite_code;
-	// App State Related Details
-	let search_term: string = $state('');
-	let active_tab: string = $state('chat');
 	//Test data
-	const test_data: test[] = [
+	const user_data: test[] = [
 		{
-			username: 'John',
-			timestamp: '21:44',
-			message_head: 'i want to fuk.'
+			chat_id: 20301991,
+			username: 'John Doe',
+			timestamp: '2025-03-14 15:13',
+			message_head: 'Hey, how are you?',
+			messages: [
+				{ content: 'Hey, how are you?', sender: 'John Doe', time: '15:13' },
+				{ content: 'I was thinking about our last trip.', sender: 'John Doe', time: '15:14' },
+				{ content: 'Do you remember the beach sunset?', sender: 'John Doe', time: '15:15' },
+				{ content: 'It was such a great moment!', sender: 'John Doe', time: '15:16' },
+				{ content: 'We should plan something similar again.', sender: 'John Doe', time: '15:17' },
+				{ content: 'Maybe a camping trip this time?', sender: 'John Doe', time: '15:18' },
+				{ content: 'Let me know what you think.', sender: 'John Doe', time: '15:19' },
+				{ content: 'By the way, did you watch the new movie?', sender: 'John Doe', time: '15:20' },
+				{ content: 'I heard it got great reviews.', sender: 'John Doe', time: '15:21' },
+				{ content: 'I’m planning to watch it this weekend.', sender: 'John Doe', time: '15:22' },
+				{ content: 'Let’s catch up soon.', sender: 'John Doe', time: '15:23' },
+				{ content: 'Also, I need your help with something.', sender: 'John Doe', time: '15:24' },
+				{ content: 'I’m working on a new project.', sender: 'John Doe', time: '15:25' },
+				{ content: 'It’s a mobile app idea.', sender: 'John Doe', time: '15:26' },
+				{ content: 'Would love to get your feedback.', sender: 'John Doe', time: '15:27' },
+				{ content: 'We could meet for coffee and discuss.', sender: 'John Doe', time: '15:28' },
+				{ content: 'I’ll send you the details soon.', sender: 'John Doe', time: '15:29' },
+				{
+					content: 'Have you been reading any good books lately?',
+					sender: 'John Doe',
+					time: '15:30'
+				},
+				{ content: 'I just finished an amazing one.', sender: 'John Doe', time: '15:31' },
+				{ content: 'I think you’d really enjoy it.', sender: 'John Doe', time: '15:32' },
+				{ content: 'Alright, talk to you later!', sender: 'John Doe', time: '15:33' }
+			]
 		},
-
 		{
+			chat_id: 20301981,
+			username: 'John',
+			timestamp: '2025-03-14 15:13',
+			message_head:
+				'i want to meet you then eat fries while watching movies and chilling with ice cream.',
+			messages: [
+				{ content: 'Hey, are you free today?', sender: 'John', time: '15:00' },
+				{
+					content: 'I want to meet you then eat fries while watching movies.',
+					sender: 'John',
+					time: '15:13'
+				},
+				{ content: 'Sounds like a plan!', sender: 'You', time: '15:20' }
+			]
+		},
+		{
+			chat_id: 20200303,
 			username: 'Lily',
 			timestamp: '21:44',
-			message_head: 'i want to meet.'
+			message_head: 'i want to meet.',
+			messages: [
+				{ content: 'Hey, long time no see!', sender: 'Lily', time: '21:30' },
+				{ content: 'Yeah! Let’s meet up soon.', sender: 'You', time: '21:35' },
+				{ content: 'I want to meet tomorrow if you’re free.', sender: 'Lily', time: '21:44' }
+			]
 		},
 		{
-			username: 'dumass',
+			chat_id: 20230303,
+			username: 'Dumass',
 			timestamp: '21:45',
-			message_head: 'man this is boring.'
+			message_head: 'man this is boring.',
+			messages: [
+				{ content: 'Dude, I’m so bored.', sender: 'Dumass', time: '21:40' },
+				{ content: 'Same here, nothing exciting happening.', sender: 'You', time: '21:42' },
+				{ content: 'Man, this is boring.', sender: 'Dumass', time: '21:45' }
+			]
+		},
+		{
+			chat_id: 20270123,
+			username: 'Baka',
+			timestamp: '15:12',
+			message_head: 'bro can i-',
+			messages: [
+				{ content: 'Bro, can I borrow your charger?', sender: 'Johnny Boi', time: '15:10' },
+				{ content: 'Sure, I’ll bring it over.', sender: 'You', time: '15:11' },
+				{ content: 'Actually, nvm it’s nothing.', sender: 'Johnny Boi', time: '15:12' }
+			]
+		},
+		{
+			chat_id: 20272303,
+			username: 'Kawaii',
+			timestamp: '15:12',
+			message_head: 'bro can i-',
+			messages: [
+				{ content: 'Bro, can I borrow your charger?', sender: 'Johnny Boi', time: '15:10' },
+				{ content: 'Sure, I’ll bring it over.', sender: 'You', time: '15:11' },
+				{ content: 'Actually, nvm it’s nothing.', sender: 'Johnny Boi', time: '15:12' }
+			]
+		},
+		{
+			chat_id: 2027423,
+			username: '<3',
+			timestamp: '15:12',
+			message_head: 'bro can i-',
+			messages: [
+				{ content: 'Bro, can I borrow your charger?', sender: 'Johnny Boi', time: '15:10' },
+				{ content: 'Sure, I’ll bring it over.', sender: 'You', time: '15:11' },
+				{ content: 'Actually, nvm it’s nothing.', sender: 'Johnny Boi', time: '15:12' }
+			]
 		}
 	];
 </script>
 
-<main class="bg-background min-h-screen min-w-screen">
+<main class="bg-background flex min-h-screen min-w-screen flex-row">
 	<!-- sidebar -->
-	<aside class="fixed flex h-screen w-1/5 flex-col bg-white/10 backdrop-blur-lg lg:relative">
-		<div class="space-y-4 p-4">
-			<!-- User Profile -->
-			<div
-				class="flex flex-col items-center justify-center rounded-lg bg-white/5 p-4 backdrop-blur-lg"
-			>
-				<div
-					class="bg-illustration-highlight flex h-16 w-16 shrink grow-0 items-center justify-center rounded-full text-xl"
+	<Sidebar {username} {invite_code} {user_data} />
+	<!-- chat section -->
+	{#if $activeChat != -1}
+		<ChatWindow {user_data} active_chat={$activeChat} />
+	{:else}
+		<div class="flex h-screen w-4/5 items-center justify-center">
+			<div class="w-max">
+				<p
+					class="text-headline border-r-headline animate-typing overflow-hidden border-r-2 text-3xl whitespace-nowrap"
 				>
-					{username.charAt(0).toUpperCase()}
-				</div>
-				<p class="text-paragraph pt-2 text-xl font-semibold">{username}</p>
-				<button
-					class="text-illustration-highlight hover:text-illustration-main transform font-medium transition-all ease-in hover:scale-105 active:scale-95"
-				>
-					@{invite_code}
-				</button>
+					Select A Chat To Start Texting
+				</p>
 			</div>
 		</div>
-		<!-- Search Bar -->
-		<div class="flex flex-row items-center justify-center">
-			<img src="/search.svg" class="w-8 pr-2" alt="search for specific chats" />
-			<input
-				type="text"
-				name="chat_search"
-				class="text-paragraph border-illustration-main w-max rounded-md border-1 p-2 outline-0"
-				placeholder="Search Active Chats"
-				bind:value={search_term}
-			/>
-		</div>
-		<!-- Chat Type Selection -->
-		<div class="mb-8 flex w-full flex-row items-center justify-center pt-4">
-			<button
-				class="{active_tab == 'chat'
-					? 'bg-illustration-highlight text-button-text'
-					: 'bg-illustration-main'} border-r-illustration-stroke rounded-l-md border-r-2
-				px-3 py-2 transition-colors ease-in"
-				onclick={() => {
-					active_tab = 'chat';
-				}}>Chats</button
-			>
-			<button
-				class="{active_tab == 'group'
-					? 'bg-illustration-highlight text-button-text'
-					: 'bg-illustration-main'} rounded-r-md p-2 transition-colors ease-in"
-				onclick={() => {
-					active_tab = 'group';
-				}}>Groups</button
-			>
-		</div>
-		{#if active_tab === 'chat'}
-			<!-- Message Tab -->
-			{#each test_data as data, i}
-				<!-- content here -->
-				<ChatWindow
-					username={data.username}
-					timestamp={data.timestamp}
-					message_head={data.message_head}
-					idx={i}
-				/>
-			{/each}
-		{:else}
-			<!-- else content here -->
-		{/if}
-	</aside>
+	{/if}
 </main>

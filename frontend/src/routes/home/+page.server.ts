@@ -14,7 +14,6 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 		throw error(401, 'Token Expired Or Invalid');
 	}
 	const user = await response.json();
-	console.log(user);
 	return { user };
 };
 export const actions = {
