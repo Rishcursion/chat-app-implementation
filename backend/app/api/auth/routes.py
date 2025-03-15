@@ -74,18 +74,18 @@ async def register(
     db: AsyncSession = Depends(get_db),
     logger: logging.Logger = Depends(logger),
 ):
-    """[TODO:summary]
+    """adds user details
 
-    [TODO:description]
+    Registers a user in the database if the credentials do not already exist.
 
     Args:
-        user_data: [TODO:description]
-        db: [TODO:description]
-        logger: [TODO:description]
+        user_data: a Pydantic model with username and password attributes 
+        db: database dependency 
+        logger: logging dependency 
 
     Raises:
-        HTTPException: [TODO:description]
-        HTTPException: [TODO:description]
+        HTTPException: 400, if the user already is registered 
+        HTTPException: 500, if the database commit fails. 
     """
     username = user_data.username
     password = user_data.password
@@ -105,17 +105,17 @@ async def get_current_user(
     db: AsyncSession = Depends(get_db),
     logger: logging.Logger = Depends(logger),
 ):
-    """[TODO:summary]
+    """Returns current user's details
 
-    [TODO:description]
+    Returns the user id and username based on the jwt associated with that user.
 
     Args:
-        token: [TODO:description]
-        db: [TODO:description]
+        token: JSON Web Token associated with the user.
+        db: database dependency
 
     Raises:
-        HTTPException: [TODO:description]
-        HTTPException: [TODO:description]
+        HTTPException: 401, if the token is expired or invalid.
+        HTTPException: 404, if the token is valid but the user is not found in the database.
     """
     logger.debug(f"Recieved Ping, token: {token}")
     payload = decode_token(token)  # Decode JWT
@@ -127,4 +127,5 @@ async def get_current_user(
     user = await get_user_by_userid(user_id, db)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    return {"username": user.user_name}
+    logger.debug(f"Invite Code: {user.friend_code.hex()}")
+    return {"username": user.user_name, "invite_code": str(user.friend_code.hex())}

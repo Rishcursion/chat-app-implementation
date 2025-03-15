@@ -10,7 +10,7 @@ from app.core.config import variables
 
 # Setting up the argon2ID with owasp defined guidelines https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
 ph = PasswordHasher(parallelism=1, memory_cost=19, hash_len=16)
-ACCESS_TOKEN_EXPIRE_MINUTES = 240
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
 
 
 def hash_password(password: str) -> str:

@@ -22,7 +22,6 @@ class UserMessages(Base):
     reply_to: Mapped[int] = mapped_column(
         Integer, ForeignKey("user_auth.user_id"), nullable=True
     )
-    read_reciepts: Mapped[dict] = mapped_column(JSONB, nullable=True)
     edited_time: Mapped[datetime.datetime] = mapped_column(TIMESTAMP, nullable=True)
     isdeleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     edited: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
@@ -42,15 +41,18 @@ class UserMessages(Base):
 
 class DirectMessages(Base):
     __tablename__ = "direct_messages"
+    chat_id: Mapped[int] = mapped_column(
+        BigInteger, primary_key=True, autoincrement=True
+    )
     message_id: Mapped[int] = mapped_column(
         BigInteger,
         ForeignKey("user_messages.message_id"),
         nullable=False,
-        primary_key=True,
     )
     reciever_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("user_auth.user_id"), nullable=False
     )
+    read: Mapped[bool] = mapped_column(Boolean, default=False)
     direct_to_messages = relationship(
         "UserMessages", back_populates="messages_to_direct"
     )
@@ -59,16 +61,19 @@ class DirectMessages(Base):
 
 class GroupMessages(Base):
     __tablename__ = "group_messages"
+    chat_id:Mapped[int] = mapped_column(BigInteger, primary_key=True,autoincrement=True)
     message_id: Mapped[int] = mapped_column(
         BigInteger,
         ForeignKey("user_messages.message_id"),
         nullable=False,
-        primary_key=True,
     )
     group_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("group_info.group_id"), nullable=False
     )
+    read_reciepts: Mapped[dict] = mapped_column(JSONB, nullable=True)
     group_messages_to_messages = relationship(
         "UserMessages", back_populates="messages_to_group_messages"
     )
-    group_messages_to_group = relationship("GroupInfo",back_populates="group_to_group_messages")
+    group_messages_to_group = relationship(
+        "GroupInfo", back_populates="group_to_group_messages"
+    )
